@@ -37,36 +37,15 @@ const log = (msg: string): void => {
 
 // 1. Enter Fullscreen
 const btnFullscreen = document.getElementById('btn-fullscreen');
-let popups: Window[] = [];
 
 btnFullscreen?.addEventListener('click', async () => {
   if (document.fullscreenElement) {
     try {
       await document.exitFullscreen();
-      popups.forEach(p => !p.closed && p.close());
-      popups = [];
     } catch (err) {
       log(`Exit fullscreen error: ${err instanceof Error ? err.message : String(err)}`);
     }
     return;
-  }
-
-  try {
-    const permissionStatus = await navigator.permissions.query({name: 'fullscreen', allowWithoutGesture: true} as any);
-    if (permissionStatus.state != 'granted') {
-      // Permission is not granted; each window will need a separate gesture to enter fullscreen.
-    }
-  } catch (error) {
-    // Permission is not supported; each window will need a separate gesture to enter fullscreen.
-  }
-
-  try {
-    const permissionStatus = await navigator.permissions.query({name: 'window-management'} as any);
-    if (permissionStatus.state != 'granted') {
-      // Permission is not yet granted; the user will be prompted, or each window will need to be placed on other screens manually.
-    }
-  } catch (error) {
-    // Permission is not supported; each window will need to be placed on other screens manually.
   }
 
   if (!window.getScreenDetails) {
@@ -78,17 +57,6 @@ btnFullscreen?.addEventListener('click', async () => {
 
   // Make the current window fullscreen on its current screen.
   document.documentElement.requestFullscreen({screen : screenDetails.currentScreen});
-
-  // Open a fullscreen popup on each other screen.
-  for (let s of screenDetails.screens.filter(s => s !== screenDetails.currentScreen)) {
-    let popup = window.open(window.location.href, '_blank', `popup,left=${s.availLeft},top=${s.availTop},width=${s.availWidth},height=${s.availHeight}`);
-    if (popup) {
-      popups.push(popup);
-      popup.addEventListener('load', () => { popup.document.documentElement.requestFullscreen({screen : s}); });
-    } else {
-      log('Popup blocked. Please allow popups for multi-monitor fullscreen.');
-    }
-  }
 });
 
 document.addEventListener('fullscreenchange', () => {
