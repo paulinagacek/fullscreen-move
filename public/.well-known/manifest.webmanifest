@@ -1,0 +1,36 @@
+{
+  "id": "/",
+  "name": "Fullscreen Move Demo",
+  "short_name": "fullscreen-move",
+  "version": "0.0.1",
+  "description": "Demonstrates programmatic fullscreen move for IWAs",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/images/icon.png",
+      "type": "image/png",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ],
+  "permissions_policy": {
+    "cross-origin-isolated": [
+      "self"
+    ],
+    "direct-sockets": [
+      "self"
+    ],
+    "window-management": [
+      "self"
+    ],
+    "display-capture": [
+      "self"
+    ],
+    "fullscreen": [
+      "self"
+    ],
+    "automatic-fullscreen": [
+      "self"
+    ]
+  }
+}
